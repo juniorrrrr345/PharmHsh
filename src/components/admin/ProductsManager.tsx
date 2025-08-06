@@ -529,11 +529,7 @@ export default function ProductsManager() {
       }
     });
 
-    // Si aucun prix, ajouter au moins une ligne par défaut
-    if (Object.keys(allPrices).length === 0) {
-      console.log('⚠️ Aucun prix trouvé, ajout d\'une ligne par défaut');
-      allPrices['3g'] = undefined;
-    }
+    // Ne pas ajouter de prix par défaut - l'utilisateur doit les ajouter manuellement
     
     const result = Object.entries(allPrices);
     console.log('🔍 getAllPriceEntries résultat final:', result);
