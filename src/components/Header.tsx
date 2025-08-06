@@ -109,7 +109,8 @@ export default function Header() {
           <img 
             src="https://i.imgur.com/mNencn1.png" 
             alt={settings.shopTitle || "ÎLE DE FRANCE FULL OPTION"} 
-            className="h-12 sm:h-16 md:h-20 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+            className="h-12 sm:h-16 md:h-20 w-auto"
+            style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
           />
           {settings.shopSubtitle && (
             <p className="text-white/80 text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] font-medium mt-1 sm:mt-2 break-words drop-shadow-sm">

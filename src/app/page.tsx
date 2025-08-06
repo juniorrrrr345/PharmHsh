@@ -224,23 +224,15 @@ export default function HomePage() {
         <div className="content-layer">
           <div className="min-h-screen flex items-center justify-center p-4">
             <div className="text-center bg-black/60 backdrop-blur-md rounded-3xl p-8 sm:p-12 max-w-lg mx-auto border border-white/20">
-              {/* Logo animé moderne avec effet diamant */}
-              <div className="mb-8">
-                <div className="relative w-40 h-40 mx-auto">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full blur-2xl opacity-70 animate-spin-slow"></div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                  <div className="relative z-10 w-full h-full flex items-center justify-center">
-                    <div className="w-24 h-24 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-600 rounded-lg rotate-45 animate-bounce shadow-2xl"></div>
-                  </div>
-                </div>
-              </div>
+
               
-              {/* Logo à la place du titre */}
-              <div className="mb-4 animate-pulse">
+              {/* Logo transparent sans contour */}
+              <div className="mb-8">
                 <img 
                   src="https://i.imgur.com/mNencn1.png" 
                   alt="ÎLE DE FRANCE FULL OPTION" 
-                  className="h-24 sm:h-32 md:h-40 w-auto mx-auto drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]"
+                  className="h-32 sm:h-40 md:h-48 w-auto mx-auto"
+                  style={{ filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.3))' }}
                 />
               </div>
               
