@@ -3,6 +3,9 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { connectToDatabase } from '@/lib/mongodb-fixed';
 
+// Force la revalidation de la page toutes les 10 secondes
+export const revalidate = 10;
+
 async function getInfoContent() {
   try {
     const { db } = await connectToDatabase();

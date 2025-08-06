@@ -98,11 +98,17 @@ export default function PagesManager() {
       if (result.success) {
         setSaveStatus('✅ Sauvegardé avec succès !');
         
-        // Invalider le cache pour forcer le rechargement
+        // Invalider le cache et revalider les pages
         try {
           await fetch('/api/cache/invalidate', { method: 'POST' });
+          await fetch('/api/revalidate', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: `/${activeTab}` })
+          });
+          console.log('✅ Cache invalidé et page revalidée');
         } catch (e) {
-          console.log('Cache invalidation skipped');
+          console.log('Cache/revalidation skipped:', e);
         }
         
         setTimeout(() => setSaveStatus(''), 3000);

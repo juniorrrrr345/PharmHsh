@@ -99,9 +99,15 @@ export default function SocialLinksManager() {
         
                   setShowModal(false);
           
-          // Invalider le cache après la sauvegarde
+          // Invalider le cache et revalider les pages
           try {
             await fetch('/api/cache/invalidate', { method: 'POST' });
+            await fetch('/api/revalidate', { 
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ path: '/social' })
+            });
+            console.log('✅ Cache invalidé et page sociale revalidée');
           } catch (error) {
             console.error('Erreur invalidation cache:', error);
           }
@@ -131,6 +137,19 @@ export default function SocialLinksManager() {
         });
 
         if (response.ok) {
+          // Invalider le cache et revalider les pages
+          try {
+            await fetch('/api/cache/invalidate', { method: 'POST' });
+            await fetch('/api/revalidate', { 
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ path: '/social' })
+            });
+            console.log('✅ Cache invalidé après suppression');
+          } catch (error) {
+            console.error('Erreur invalidation cache:', error);
+          }
+          
           // Afficher message de succès
           const successMsg = document.createElement('div');
           successMsg.className = 'fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-[9999] transition-all duration-300';
