@@ -105,14 +105,18 @@ export default function Header() {
       
                 {/* Logo boutique - responsive optimisé */}
       <div className="bg-black/30 backdrop-blur-md py-2 sm:py-3 md:py-4 px-3 sm:px-4 md:px-6 text-center border-b border-white/10">
-        <h1 className={getTitleClass()}>
-          {settings.shopTitle}
-        </h1>
-        {settings.shopSubtitle && (
-          <p className="text-white/80 text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] font-medium mt-0.5 sm:mt-1 break-words drop-shadow-sm">
-            {settings.shopSubtitle}
-          </p>
-        )}
+        <div className="flex flex-col items-center justify-center">
+          <img 
+            src="https://i.imgur.com/mNencn1.png" 
+            alt={settings.shopTitle || "ÎLE DE FRANCE FULL OPTION"} 
+            className="h-12 sm:h-16 md:h-20 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+          />
+          {settings.shopSubtitle && (
+            <p className="text-white/80 text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] font-medium mt-1 sm:mt-2 break-words drop-shadow-sm">
+              {settings.shopSubtitle}
+            </p>
+          )}
+        </div>
       </div>
     </header>
   );

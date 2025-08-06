@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../components/Header';
-// Redéploiement forcé - Nouveau chargement JBEL INDUSTRY
+// Redéploiement forcé - Nouveau chargement ÎLE DE FRANCE FULL OPTION
 import CategoryFilter from '../components/CategoryFilter';
 import ProductCard, { Product } from '../components/ProductCard';
 import ProductDetail from '../components/ProductDetail';
@@ -224,44 +224,50 @@ export default function HomePage() {
         <div className="content-layer">
           <div className="min-h-screen flex items-center justify-center p-4">
             <div className="text-center bg-black/60 backdrop-blur-md rounded-3xl p-8 sm:p-12 max-w-lg mx-auto border border-white/20">
-              {/* Logo animé moderne */}
+              {/* Logo animé moderne avec effet diamant */}
               <div className="mb-8">
                 <div className="relative w-40 h-40 mx-auto">
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-2xl opacity-70 animate-pulse"></div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-full blur-xl opacity-50 animate-ping"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full blur-2xl opacity-70 animate-spin-slow"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
                   <div className="relative z-10 w-full h-full flex items-center justify-center">
-                    <span className="text-8xl animate-bounce filter drop-shadow-2xl">🔥</span>
+                    <div className="w-24 h-24 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-600 rounded-lg rotate-45 animate-bounce shadow-2xl"></div>
                   </div>
                 </div>
               </div>
               
-              {/* Titre avec effet néon et ombre */}
-              <h1 className="text-5xl sm:text-7xl font-black mb-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-transparent bg-clip-text animate-pulse drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
-                JBEL INDUSTRY
-              </h1>
-              
-              <p className="text-2xl text-white mb-8 font-semibold drop-shadow-lg">
-                Préparation en cours...
-              </p>
-              
-              {/* Nouvelle barre de chargement 3D */}
-              <div className="w-80 max-w-full mx-auto mb-8">
-                <div className="h-4 bg-white/20 rounded-full overflow-hidden border border-white/40 shadow-inner">
-                  <div className="h-full bg-gradient-to-r from-yellow-500 via-orange-500 to-red-600 rounded-full shadow-lg animate-loading-bar"></div>
-                </div>
-                <div className="mt-2 text-sm text-white font-medium drop-shadow-md">Chargement...</div>
+              {/* Logo à la place du titre */}
+              <div className="mb-4 animate-pulse">
+                <img 
+                  src="https://i.imgur.com/mNencn1.png" 
+                  alt="ÎLE DE FRANCE FULL OPTION" 
+                  className="h-24 sm:h-32 md:h-40 w-auto mx-auto drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]"
+                />
               </div>
               
-              {/* Animation de particules */}
+              <p className="text-2xl text-white mb-8 font-semibold drop-shadow-lg animate-pulse">
+                ÎLE DE FRANCE FULL OPTION
+              </p>
+              
+              {/* Nouvelle barre de chargement style néon */}
+              <div className="w-80 max-w-full mx-auto mb-8">
+                <div className="h-4 bg-black/50 rounded-full overflow-hidden border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+                  <div className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg animate-loading-bar relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                  </div>
+                </div>
+                <div className="mt-2 text-sm text-blue-300 font-medium drop-shadow-md animate-pulse">Chargement en cours...</div>
+              </div>
+              
+              {/* Animation de particules style diamant */}
               <div className="flex justify-center gap-3 mb-8">
-                <div className="w-3 h-3 bg-yellow-400 rounded-full animate-bounce shadow-lg shadow-yellow-400/50" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-3 h-3 bg-orange-500 rounded-full animate-bounce shadow-lg shadow-orange-500/50" style={{ animationDelay: '200ms' }}></div>
-                <div className="w-3 h-3 bg-red-500 rounded-full animate-bounce shadow-lg shadow-red-500/50" style={{ animationDelay: '400ms' }}></div>
+                <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce shadow-[0_0_10px_rgba(96,165,250,0.8)]" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce shadow-[0_0_10px_rgba(168,85,247,0.8)]" style={{ animationDelay: '200ms' }}></div>
+                <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce shadow-[0_0_10px_rgba(236,72,153,0.8)]" style={{ animationDelay: '400ms' }}></div>
               </div>
               
               {/* Footer */}
               <div className="text-white text-sm font-medium drop-shadow-md">
-                <p>© 2025 JUNIOR X JBEL</p>
+                <p>© 2025 ÎLE DE FRANCE FULL OPTION</p>
               </div>
             </div>
           </div>
