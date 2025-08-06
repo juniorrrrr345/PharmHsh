@@ -13,8 +13,22 @@ async function getContactData() {
       db.collection('socialLinks').find({ isActive: true }).toArray()
     ]);
     
+    console.log('Page contact trouvée:', page ? 'Oui' : 'Non');
+    console.log('Réseaux sociaux trouvés:', socialLinks.length);
+    
+    // Si la page n'existe pas, la créer
+    if (!page) {
+      await db.collection('pages').insertOne({
+        slug: 'contact',
+        title: 'Contact',
+        content: '# Contactez ÎLE DE FRANCE FULL OPTION\n\nNous sommes à votre disposition pour répondre à toutes vos questions.\n\nModifiez ce contenu depuis le panel d\'administration.',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    }
+    
     return {
-      content: page?.content || '',
+      content: page?.content || '# Contactez ÎLE DE FRANCE FULL OPTION\n\nNous sommes à votre disposition pour répondre à toutes vos questions.',
       whatsappLink: settings?.whatsappLink || '',
       socialLinks: socialLinks || []
     };

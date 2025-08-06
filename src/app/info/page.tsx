@@ -7,7 +7,21 @@ async function getInfoContent() {
   try {
     const { db } = await connectToDatabase();
     const page = await db.collection('pages').findOne({ slug: 'info' });
-    return page?.content || '';
+    console.log('Page info trouvée:', page ? 'Oui' : 'Non');
+    
+    // Si la page n'existe pas, la créer
+    if (!page) {
+      await db.collection('pages').insertOne({
+        slug: 'info',
+        title: 'Informations',
+        content: 'Bienvenue sur la page d\'informations de ÎLE DE FRANCE FULL OPTION.\n\nModifiez ce contenu depuis le panel d\'administration.',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      return 'Bienvenue sur la page d\'informations de ÎLE DE FRANCE FULL OPTION.\n\nModifiez ce contenu depuis le panel d\'administration.';
+    }
+    
+    return page.content || '';
   } catch (error) {
     console.error('Erreur chargement info:', error);
     return '';

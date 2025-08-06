@@ -25,9 +25,27 @@ async function getSocialData() {
     const { db } = await connectToDatabase();
     
     const [socialLinks, settings] = await Promise.all([
-      db.collection('socialLinks').find({ isActive: true }).toArray(),
+      db.collection('socialLinks').find({ isActive: true }).sort({ order: 1 }).toArray(),
       db.collection('settings').findOne({})
     ]);
+    
+    console.log('Réseaux sociaux actifs trouvés:', socialLinks.length);
+    
+    // Créer des réseaux sociaux par défaut s'il n'y en a pas
+    if (socialLinks.length === 0) {
+      const defaultLinks = [
+        { name: 'Instagram', url: '#', icon: '📷', color: '#E4405F', isActive: true, order: 1 },
+        { name: 'Facebook', url: '#', icon: '👍', color: '#1877F2', isActive: true, order: 2 },
+        { name: 'WhatsApp', url: '#', icon: '💬', color: '#25D366', isActive: true, order: 3 }
+      ];
+      
+      await db.collection('socialLinks').insertMany(defaultLinks);
+      
+      return {
+        socialLinks: defaultLinks as SocialLink[],
+        settings: settings as Settings | null
+      };
+    }
     
     return {
       socialLinks: socialLinks as SocialLink[],
