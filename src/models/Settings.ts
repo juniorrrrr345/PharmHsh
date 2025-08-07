@@ -32,6 +32,10 @@ const settingsSchema = new mongoose.Schema({
   backgroundBlur: {
     type: Number,
     default: 5
+  },
+  telegramUsername: {
+    type: String,
+    default: ''
   }
 }, {
   timestamps: true
