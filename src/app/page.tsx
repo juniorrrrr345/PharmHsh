@@ -281,7 +281,9 @@ export default function HomePage() {
       {/* Contenu principal avec navigation */}
       <div className="content-layer">
         <Header />
-            
+        
+        {/* Ajouter un padding-top pour compenser le header fixe */}
+        <div className="pt-24 sm:pt-28 md:pt-32">
             {selectedProduct ? (
               <ProductDetail 
                 product={selectedProduct} 
@@ -324,6 +326,7 @@ export default function HomePage() {
                 </main>
               </div>
             )}
+        </div>
       </div>
       
       {/* BottomNav toujours visible - en dehors du content-layer */}

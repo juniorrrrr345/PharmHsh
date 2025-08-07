@@ -200,10 +200,9 @@ export default function Cart() {
               
               <button
                 onClick={handleSendOrder}
-                disabled={isLoading}
-                className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-green-500 py-3 font-medium text-white hover:from-blue-600 hover:to-green-600 disabled:opacity-50 transition-all"
+                className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-green-500 py-3 font-medium text-white hover:from-blue-600 hover:to-green-600 transition-all"
               >
-                {isLoading ? 'Envoi en cours...' : `Envoyer à ${telegramUsername}`}
+                {`Envoyer à ${telegramUsername}`}
               </button>
               
               <button
