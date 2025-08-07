@@ -31,26 +31,11 @@ export default function Cart() {
       return;
     }
     
-    // Formater la date
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-    const timeStr = now.toLocaleTimeString('fr-FR', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-    
     // Calculer le total
     const total = getTotalPrice();
     
     // Construire le message
-    let message = `🌿 *COMMANDE FRESHSWISS* 🌿\n\n`;
-    message += `📅 Date: ${dateStr} à ${timeStr}\n`;
-    message += `📱 Via: Mini-App Catalogue\n\n`;
-    message += `🛒 *DÉTAIL DE LA COMMANDE:*\n\n`;
+    let message = `🛒 *DÉTAIL DE LA COMMANDE:*\n\n`;
     
     items.forEach((item, index) => {
       const itemTotal = item.price * item.quantity;
@@ -61,15 +46,13 @@ export default function Cart() {
       message += `   • Total: ${itemTotal.toFixed(2)}€\n`;
       
       if (item.discount > 0) {
-        message += `   • Remise: -${item.discount}% (prix dégressif)\n`;
+        message += `   • Remise: -${item.discount}%\n`;
       }
       
       message += '\n';
     });
     
-    message += `💰 *TOTAL: ${total.toFixed(2)}€*\n\n`;
-    message += `📞 Merci de confirmer cette commande et les modalités de livraison/paiement.\n`;
-    message += `🚚 Livraison disponible ou retrait sur place.`;
+    message += `💰 *TOTAL: ${total.toFixed(2)}€*`;
     
     // Encoder le message pour l'URL
     const encodedMessage = encodeURIComponent(message);
