@@ -7,6 +7,7 @@ interface Settings {
   bannerText: string;
   loadingText: string;
   whatsappLink: string;
+  telegramUsername: string;
 
   titleStyle: string;
   backgroundImage: string;
@@ -22,6 +23,7 @@ export default function SettingsManager() {
     bannerText: '',
     loadingText: '',
     whatsappLink: '',
+    telegramUsername: '',
 
     titleStyle: 'glow',
     backgroundImage: '',
@@ -49,6 +51,7 @@ export default function SettingsManager() {
           bannerText: data.bannerText || '',
           loadingText: data.loadingText || '',
           whatsappLink: data.whatsappLink || data.telegramLink || '',
+          telegramUsername: data.telegramUsername || '',
 
           titleStyle: data.titleStyle || 'glow',
           backgroundImage: data.backgroundImage || '',
@@ -238,7 +241,19 @@ export default function SettingsManager() {
               <p className="text-xs text-gray-400 mt-1">Format: https://wa.me/[code pays][numéro]</p>
             </div>
 
-
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Username Telegram (pour les commandes)
+              </label>
+              <input
+                type="text"
+                value={settings.telegramUsername}
+                onChange={(e) => updateField('telegramUsername', e.target.value)}
+                className="w-full bg-gray-800 border border-white/20 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white"
+                placeholder="@FreshSwiss"
+              />
+              <p className="text-xs text-gray-400 mt-1">Le @ sera ajouté automatiquement si absent</p>
+            </div>
           </div>
         </div>
 

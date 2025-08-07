@@ -150,28 +150,28 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
           </h3>
           <div className="space-y-2 sm:space-y-3">
             {priceList.map(({ weight, originalPrice, finalPrice, discount }, idx) => (
-              <div key={idx} className="flex items-center justify-between py-2 sm:py-3 px-2 sm:px-3 bg-gray-800 border border-white/10 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <span className="font-medium text-white text-responsive-sm">{weight}</span>
+              <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 sm:py-4 px-3 sm:px-4 bg-gray-800 border border-white/10 rounded-lg hover:bg-gray-700 transition-colors">
+                <div className="flex items-center gap-3 mb-2 sm:mb-0">
+                  <span className="font-medium text-white text-responsive-base">{weight}</span>
                   {discount > 0 && (
                     <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
                       PROMO -{discount}%
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <div className="text-right flex-1 sm:flex-initial">
                     {discount > 0 && (
-                      <span className="text-gray-500 line-through text-sm">{originalPrice}€</span>
+                      <span className="text-gray-500 line-through text-sm block">{originalPrice}€</span>
                     )}
-                    <span className="font-bold text-white text-responsive-lg block">{finalPrice.toFixed(2)}€</span>
+                    <span className="font-bold text-white text-responsive-lg">{finalPrice.toFixed(2)}€</span>
                   </div>
                   <button
                     onClick={() => handleAddToCart(weight, finalPrice, originalPrice, discount)}
-                    className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition-colors"
-                    title="Ajouter au panier"
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 text-sm font-medium whitespace-nowrap"
                   >
                     <ShoppingCart className="w-4 h-4" />
+                    <span>Ajouter au panier</span>
                   </button>
                 </div>
               </div>

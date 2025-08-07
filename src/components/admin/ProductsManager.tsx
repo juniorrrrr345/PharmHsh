@@ -13,6 +13,9 @@ interface Product {
   prices: {
     [key: string]: number;
   };
+  promotions?: {
+    [key: string]: number;
+  };
   description?: string;
   isActive: boolean;
 }
@@ -33,6 +36,7 @@ export default function ProductsManager() {
     image: '',
     video: '',
     prices: {},
+    promotions: {},
     description: '',
     isActive: true
   });
@@ -41,6 +45,8 @@ export default function ProductsManager() {
   const [priceInputs, setPriceInputs] = useState<{ [key: string]: string }>({});
   // États locaux pour les quantités (séparés pour éviter les conflits)
   const [quantityInputs, setQuantityInputs] = useState<{ [key: string]: string }>({});
+  // États locaux pour les promotions
+  const [promotionInputs, setPromotionInputs] = useState<{ [key: string]: string }>({});
   // Ref pour maintenir le focus
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
   const [refreshCounter, setRefreshCounter] = useState(0);
@@ -112,11 +118,13 @@ export default function ProductsManager() {
     setEditingProduct(product);
     setFormData({
       ...product,
-      prices: { ...product.prices }
+      prices: { ...product.prices },
+      promotions: { ...product.promotions } || {}
     });
     // Synchroniser les états locaux des prix
     const priceStrings: { [key: string]: string } = {};
     const quantityStrings: { [key: string]: string } = {};
+    const promotionStrings: { [key: string]: string } = {};
     
     // Traiter tous les prix existants, même ceux avec des valeurs null/undefined
     Object.entries(product.prices || {}).forEach(([key, value]) => {
@@ -124,11 +132,18 @@ export default function ProductsManager() {
       quantityStrings[key] = key; // La quantité est la clé
     });
     
+    // Traiter les promotions existantes
+    Object.entries(product.promotions || {}).forEach(([key, value]) => {
+      promotionStrings[key] = (value !== null && value !== undefined && value !== 0) ? value.toString() : '';
+    });
+    
     console.log('💰 Prix initialisés:', priceStrings);
     console.log('📏 Quantités initialisées:', quantityStrings);
+    console.log('🎁 Promotions initialisées:', promotionStrings);
     
     setPriceInputs(priceStrings);
     setQuantityInputs(quantityStrings);
+    setPromotionInputs(promotionStrings);
     setActiveTab('infos'); // Reset tab to infos
     setShowModal(true);
     
@@ -152,6 +167,7 @@ export default function ProductsManager() {
     // Aucun prix par défaut - interface complètement vide
     setPriceInputs({});
     setQuantityInputs({});
+    setPromotionInputs({});
     setActiveTab('infos'); // Reset tab to infos
     setShowModal(true);
   };
@@ -212,10 +228,11 @@ export default function ProductsManager() {
       return;
     }
     
-    // RÉCUPÉRER LES PRIX DIRECTEMENT ICI POUR LA SAUVEGARDE
+    // RÉCUPÉRER LES PRIX ET PROMOTIONS DIRECTEMENT ICI POUR LA SAUVEGARDE
     const finalPrices: { [key: string]: number } = {};
+    const finalPromotions: { [key: string]: number } = {};
     
-    console.log('🔍 DEBUG: Récupération des prix...');
+    console.log('🔍 DEBUG: Récupération des prix et promotions...');
     
     // Récupérer TOUS les inputs dans la page (pas juste le modal)
     const allNumberInputs = document.querySelectorAll('input[type="number"]');
@@ -224,7 +241,7 @@ export default function ProductsManager() {
     console.log('🔍 Inputs trouvés - Numbers:', allNumberInputs.length, 'Text:', allTextInputs.length);
     
     // Aussi récupérer depuis les états locaux directement
-    console.log('🔍 États locaux - priceInputs:', priceInputs, 'quantityInputs:', quantityInputs);
+    console.log('🔍 États locaux - priceInputs:', priceInputs, 'quantityInputs:', quantityInputs, 'promotionInputs:', promotionInputs);
     
     // Utiliser les états locaux comme source principale
     Object.keys(priceInputs).forEach(key => {
@@ -233,6 +250,17 @@ export default function ProductsManager() {
         const numericValue = parseFloat(priceValue);
         if (!isNaN(numericValue) && numericValue > 0) {
           finalPrices[key] = numericValue;
+        }
+      }
+    });
+    
+    // Récupérer les promotions
+    Object.keys(promotionInputs).forEach(key => {
+      const promoValue = promotionInputs[key];
+      if (promoValue && promoValue !== '') {
+        const numericValue = parseFloat(promoValue);
+        if (!isNaN(numericValue) && numericValue > 0 && numericValue <= 100) {
+          finalPromotions[key] = numericValue;
         }
       }
     });
@@ -253,6 +281,7 @@ export default function ProductsManager() {
     
     console.log('💾 Prix à sauvegarder:', finalPrices);
     console.log('💾 Nombre de prix trouvés:', Object.keys(finalPrices).length);
+    console.log('🎁 Promotions à sauvegarder:', finalPromotions);
     
     // Vérifier qu'on a au moins un prix
     if (Object.keys(finalPrices).length === 0) {
@@ -274,7 +303,8 @@ export default function ProductsManager() {
 
       const cleanedFormData = {
         ...formData,
-        prices: cleanedPrices
+        prices: cleanedPrices,
+        promotions: finalPromotions
       };
 
       const url = editingProduct ? `/api/products/${editingProduct._id}` : '/api/products';
@@ -456,6 +486,16 @@ export default function ProductsManager() {
     console.log('💰 Prix mis à jour:', priceKey, '=', value);
   }, []);
 
+  const updatePromotion = useCallback((priceKey: string, value: string) => {
+    // Stocker dans l'objet ET dans l'état local pour être sûr
+    promotionInputs[priceKey] = value;
+    setPromotionInputs(prev => ({
+      ...prev,
+      [priceKey]: value
+    }));
+    console.log('🎁 Promotion mise à jour:', priceKey, '=', value);
+  }, []);
+
   // Composant de champ de prix isolé pour éviter les re-renders
   const PriceInput = useCallback(({ priceKey, value }: { priceKey: string; value?: number | undefined }) => {
     return (
@@ -475,6 +515,29 @@ export default function ProductsManager() {
         step="0.01"
         inputMode="decimal"
         min="0"
+      />
+    );
+  }, []);
+
+  // Composant de champ de promotion isolé pour éviter les re-renders
+  const PromotionInput = useCallback(({ priceKey, value }: { priceKey: string; value?: number | undefined }) => {
+    return (
+      <input
+        key={`promo-${priceKey}`} // Clé unique pour chaque champ
+        type="number"
+        defaultValue={value !== undefined && value !== null && value !== 0 ? value.toString() : ''}
+        onChange={(e) => {
+          // Stocker ET mettre à jour l'état
+          const value = e.target.value;
+          promotionInputs[priceKey] = value;
+          updatePromotion(priceKey, value);
+        }}
+        className="w-full bg-gray-800 border border-white/20 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white/50"
+        placeholder="% de réduction"
+        step="1"
+        inputMode="numeric"
+        min="0"
+        max="100"
       />
     );
   }, []);
@@ -1167,6 +1230,10 @@ export default function ProductsManager() {
                         <label className="block text-xs text-gray-400 mb-1">Prix (€)</label>
                         <PriceInput priceKey={priceKey} value={value} />
                       </div>
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-400 mb-1">Promo (%)</label>
+                        <PromotionInput priceKey={priceKey} value={formData.promotions?.[priceKey]} />
+                      </div>
                       <button
                         type="button"
                         onClick={() => removePrice(priceKey)}
@@ -1358,15 +1425,19 @@ export default function ProductsManager() {
                                 <label className="block text-xs text-gray-400 mb-1">Quantité</label>
                                 <QuantityInput priceKey={priceKey} />
                               </div>
-                            <div className="flex gap-2">
-                              <div className="flex-1">
-                                <label className="block text-xs text-gray-400 mb-1">Prix (€)</label>
-                                <PriceInput priceKey={priceKey} value={value} />
-                              </div>
+                            <div>
+                              <label className="block text-xs text-gray-400 mb-1">Prix (€)</label>
+                              <PriceInput priceKey={priceKey} value={value} />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-gray-400 mb-1">Promotion (%)</label>
+                              <PromotionInput priceKey={priceKey} value={formData.promotions?.[priceKey]} />
+                            </div>
+                            <div className="flex justify-end">
                               <button
                                 type="button"
                                 onClick={() => removePrice(priceKey)}
-                                className="bg-red-900/20 border border-red-400/20 hover:bg-red-900/40 text-red-400 p-2 rounded-lg transition-colors mt-5"
+                                className="bg-red-900/20 border border-red-400/20 hover:bg-red-900/40 text-red-400 p-2 rounded-lg transition-colors"
                                 title="Supprimer"
                               >
                                 🗑️

@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import CachePreloader from '@/components/CachePreloader'
 import GlobalBackgroundProvider from '@/components/GlobalBackgroundProvider'
+import Cart from '@/components/Cart'
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -105,6 +107,23 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`} suppressHydrationWarning style={{ backgroundColor: 'black' }}>
         <GlobalBackgroundProvider />
         <CachePreloader />
+        <Toaster 
+          position="top-center"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#333',
+              color: '#fff',
+            },
+            success: {
+              iconTheme: {
+                primary: '#10b981',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+        <Cart />
         {children}
       </body>
     </html>

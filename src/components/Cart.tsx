@@ -3,12 +3,28 @@
 import { useCartStore } from '@/lib/cartStore';
 import Image from 'next/image';
 import { X, Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
 export default function Cart() {
   const { items, isOpen, setIsOpen, updateQuantity, removeItem, clearCart, getTotalPrice } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [telegramUsername, setTelegramUsername] = useState('@FreshSwiss');
+  
+  useEffect(() => {
+    // Charger le username Telegram depuis les settings
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.telegramUsername) {
+          const username = data.telegramUsername.startsWith('@') 
+            ? data.telegramUsername 
+            : `@${data.telegramUsername}`;
+          setTelegramUsername(username);
+        }
+      })
+      .catch(() => {});
+  }, []);
   
   const handleSendOrder = async () => {
     setIsLoading(true);
@@ -149,7 +165,7 @@ export default function Cart() {
                 disabled={isLoading}
                 className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-green-500 py-3 font-medium text-white hover:from-blue-600 hover:to-green-600 disabled:opacity-50 transition-all"
               >
-                {isLoading ? 'Envoi en cours...' : 'Envoyer à @FreshSwiss'}
+                {isLoading ? 'Envoi en cours...' : `Envoyer à ${telegramUsername}`}
               </button>
               
               <button
