@@ -8,7 +8,6 @@ import { toast } from 'react-hot-toast';
 
 export default function Cart() {
   const { items, isOpen, setIsOpen, updateQuantity, removeItem, clearCart, getTotalPrice } = useCartStore();
-  const [isLoading, setIsLoading] = useState(false);
   const [telegramUsername, setTelegramUsername] = useState('@FreshSwiss');
   
   useEffect(() => {
@@ -27,31 +26,71 @@ export default function Cart() {
   }, []);
   
   const handleSendOrder = async () => {
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch('/api/send-order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ items }),
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        toast.success('Commande envoyée avec succès !');
-        clearCart();
-        setIsOpen(false);
-      } else {
-        toast.error(data.error || 'Erreur lors de l\'envoi de la commande');
-      }
-    } catch (error) {
-      toast.error('Erreur de connexion');
-    } finally {
-      setIsLoading(false);
+    if (items.length === 0) {
+      toast.error('Votre panier est vide');
+      return;
     }
+    
+    // Formater la date
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    const timeStr = now.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    // Calculer le total
+    const total = getTotalPrice();
+    
+    // Construire le message
+    let message = `🌿 *COMMANDE FRESHSWISS* 🌿\n\n`;
+    message += `📅 Date: ${dateStr} à ${timeStr}\n`;
+    message += `📱 Via: Mini-App Catalogue\n\n`;
+    message += `🛒 *DÉTAIL DE LA COMMANDE:*\n\n`;
+    
+    items.forEach((item, index) => {
+      const itemTotal = item.price * item.quantity;
+      
+      message += `${index + 1}. 🍒 ${item.productName}\n`;
+      message += `   • Quantité: ${item.quantity}x ${item.weight}\n`;
+      message += `   • Prix unitaire: ${item.originalPrice}€\n`;
+      message += `   • Total: ${itemTotal.toFixed(2)}€\n`;
+      
+      if (item.discount > 0) {
+        message += `   • Remise: -${item.discount}% (prix dégressif)\n`;
+      }
+      
+      message += '\n';
+    });
+    
+    message += `💰 *TOTAL: ${total.toFixed(2)}€*\n\n`;
+    message += `📞 Merci de confirmer cette commande et les modalités de livraison/paiement.\n`;
+    message += `🚚 Livraison disponible ou retrait sur place.`;
+    
+    // Encoder le message pour l'URL
+    const encodedMessage = encodeURIComponent(message);
+    
+    // Retirer le @ du username s'il est présent
+    const cleanUsername = telegramUsername.replace('@', '');
+    
+    // Ouvrir Telegram avec le message pré-rempli
+    const telegramUrl = `https://t.me/${cleanUsername}?text=${encodedMessage}`;
+    
+    // Ouvrir dans une nouvelle fenêtre
+    window.open(telegramUrl, '_blank');
+    
+    // Afficher un message de succès
+    toast.success('Redirection vers Telegram...');
+    
+    // Optionnel : vider le panier après un délai
+    setTimeout(() => {
+      clearCart();
+      setIsOpen(false);
+    }, 2000);
   };
   
   if (!isOpen) return null;
