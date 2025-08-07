@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/mongodb';
+import { connectToDatabase } from '@/lib/mongodb-fixed';
 import Settings from '@/models/Settings';
 import { CartItem } from '@/lib/cartStore';
 
@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
     }
     
     // Récupérer le username Telegram depuis les settings
-    await connectDB();
-    const settings = await Settings.findOne();
+    const { db } = await connectToDatabase();
+    const settings = await db.collection('settings').findOne({});
     const telegramUsername = settings?.telegramUsername;
     
     if (!telegramUsername) {
@@ -46,8 +46,9 @@ export async function POST(request: NextRequest) {
       const itemTotal = item.price * item.quantity;
       
       message += `${index + 1}. 🍒 ${item.productName}\n`;
-      message += `   • Quantité: ${item.quantity}x ${item.weight} = ${totalWeight}g total\n`;
-      message += `   • Prix: ${item.originalPrice}€/g × ${totalWeight}g = ${itemTotal.toFixed(2)}€\n`;
+      message += `   • Quantité: ${item.quantity}x ${item.weight}\n`;
+      message += `   • Prix unitaire: ${item.originalPrice}€\n`;
+      message += `   • Total: ${itemTotal.toFixed(2)}€\n`;
       
       if (item.discount > 0) {
         message += `   • Remise: -${item.discount}% (prix dégressif)\n`;

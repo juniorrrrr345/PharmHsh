@@ -920,8 +920,8 @@ export default function ProductsManager() {
 
       {/* Modal d'édition */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/90 flex items-start justify-center p-0 sm:p-4 z-[9999] overflow-y-auto lg:items-center">
-          <div className="bg-gray-900 border-0 sm:border border-white/20 rounded-none sm:rounded-xl w-full max-w-4xl my-0 lg:my-4 backdrop-blur-sm min-h-[100vh] sm:min-h-0 sm:max-h-[95vh] flex flex-col">
+        <div className="fixed inset-0 bg-black/90 flex items-start justify-center p-0 sm:p-4 z-[99999] overflow-y-auto lg:items-center">
+          <div className="bg-gray-900 border-0 sm:border border-white/20 rounded-none sm:rounded-xl w-full max-w-4xl my-0 lg:my-4 backdrop-blur-sm min-h-[100vh] sm:min-h-0 sm:max-h-[95vh] flex flex-col pb-20 sm:pb-0">
             {/* Header fixe avec bouton fermer mobile */}
             <div className="p-3 sm:p-6 border-b border-white/20 flex-shrink-0 flex items-center justify-between">
               <h2 className="text-lg sm:text-xl font-bold text-white">

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCartStore } from '@/lib/cartStore';
-import Image from 'next/image';
+// Removed Next Image import - using regular img for better compatibility
 import { X, Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
@@ -60,15 +60,15 @@ export default function Cart() {
   const total = getTotalPrice();
   
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-[9999] overflow-hidden pointer-events-none">
       {/* Overlay */}
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto"
         onClick={() => setIsOpen(false)}
       />
       
       {/* Cart Panel */}
-      <div className="absolute right-0 top-0 h-full w-full max-w-md bg-gray-900 shadow-xl">
+      <div className="absolute right-0 top-0 h-full w-full max-w-md bg-gray-900 shadow-xl pointer-events-auto overflow-hidden">
         <div className="flex h-full flex-col">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
@@ -98,19 +98,18 @@ export default function Cart() {
                 {items.map((item) => (
                   <div key={`${item.productId}-${item.weight}`} className="rounded-lg bg-gray-800/50 p-4">
                     <div className="flex gap-4">
-                      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
-                        <Image
+                      <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+                        <img
                           src={item.image}
                           alt={item.productName}
-                          fill
-                          className="object-cover"
+                          className="h-full w-full object-cover"
                         />
                       </div>
                       
                       <div className="flex-1">
                         <h3 className="font-medium text-white">{item.productName}</h3>
                         <p className="text-sm text-gray-400">
-                          {item.weight} × {item.originalPrice}€/g
+                          {item.weight} - {item.originalPrice}€
                           {item.discount > 0 && (
                             <span className="ml-2 rounded bg-green-500/20 px-1.5 py-0.5 text-xs font-medium text-green-400">
                               -{item.discount}%
