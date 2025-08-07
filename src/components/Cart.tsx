@@ -35,7 +35,7 @@ export default function Cart() {
     const total = getTotalPrice();
     
     // Construire le message
-    let message = `🛒 *DÉTAIL DE LA COMMANDE:*\n\n`;
+    let message = `🛒 **DÉTAIL DE LA COMMANDE:**\n\n`;
     
     items.forEach((item, index) => {
       const itemTotal = item.price * item.quantity;
@@ -52,7 +52,7 @@ export default function Cart() {
       message += '\n';
     });
     
-    message += `💰 *TOTAL: ${total.toFixed(2)}€*`;
+    message += `💰 **TOTAL: ${total.toFixed(2)}€**`;
     
     // Encoder le message pour l'URL
     const encodedMessage = encodeURIComponent(message);
