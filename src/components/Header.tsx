@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import contentCache from '@/lib/contentCache';
+import { useCartStore } from '@/lib/cartStore';
+import { ShoppingCart } from 'lucide-react';
 
 interface Settings {
   shopTitle: string;
@@ -11,6 +13,9 @@ interface Settings {
 }
 
 export default function Header() {
+  const { getTotalItems, setIsOpen } = useCartStore();
+  const totalItems = getTotalItems();
+  
   // Forcer les données du cache instantané - JAMAIS d'ancien contenu
   // Header instantané depuis localStorage
   const [settings, setSettings] = useState(() => {
@@ -51,74 +56,77 @@ export default function Header() {
             bannerText: data.bannerText || '',
             titleStyle: data.titleStyle || 'glow'
           });
-          // Sauvegarder pour la prochaine fois
-          localStorage.setItem('adminSettings', JSON.stringify(data));
+          // Maj cache local
+          try {
+            localStorage.setItem('adminSettings', JSON.stringify(data));
+          } catch (e) {}
         })
         .catch(() => {});
-    }, 50);
+    }, 100);
   }, []);
 
-  const getTitleClass = () => {
-    const baseClass = "text-responsive-lg sm:text-responsive-xl md:text-responsive-2xl font-black tracking-wider transition-all duration-300 text-center line-height-tight";
+  // Effet de titre dynamique
+  const getTitleClassName = () => {
+    const baseClass = "text-2xl md:text-4xl font-bold text-center text-white uppercase tracking-wider";
     
     switch (settings.titleStyle) {
+      case 'glow':
+        return `${baseClass} animate-glow`;
       case 'gradient':
         return `${baseClass} bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent`;
       case 'neon':
-        return `${baseClass} text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]`;
-      case 'rainbow':
-        return `${baseClass} bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent animate-pulse`;
-      case 'glow':
-        return `${baseClass} text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]`;
-      case 'shadow':
-        return `${baseClass} text-white drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)]`;
-      case 'bounce':
-        return `${baseClass} text-white animate-bounce`;
-      case 'graffiti':
-        return `graffiti-text text-responsive-lg sm:text-responsive-xl md:text-responsive-2xl font-normal`;
+        return `${baseClass} text-green-400 drop-shadow-[0_0_10px_rgba(74,222,128,0.8)]`;
+      case 'retro':
+        return `${baseClass} text-yellow-400 [text-shadow:2px_2px_0px_#ff6b6b]`;
       default:
-        return `${baseClass} text-white`;
+        return baseClass;
     }
   };
 
   return (
-    <header className="fixed top-0 w-full z-40 bg-black/40 backdrop-blur-md safe-area-padding">
-      {/* Texte défilant - depuis l'admin */}
-      {settings.scrollingText && settings.scrollingText.trim() && (
-        <div className="bg-black/30 backdrop-blur-sm text-white py-0.5 overflow-hidden relative border-b border-white/10">
-          <div className="animate-marquee whitespace-nowrap inline-block">
-            <span className="text-xs font-bold tracking-wide px-4 text-white drop-shadow-md">
-              {settings.scrollingText}
+    <header className="bg-gradient-to-r from-gray-900 via-black to-gray-900 py-6 px-4 border-b border-white/10">
+      {/* Titre et sous-titre */}
+      <div className="max-w-7xl mx-auto relative">
+        {/* Bouton panier en position absolue */}
+        <button
+          onClick={() => setIsOpen(true)}
+          className="absolute right-0 top-0 bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-lg transition-colors flex items-center gap-2"
+        >
+          <ShoppingCart className="w-5 h-5" />
+          {totalItems > 0 && (
+            <span className="bg-green-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {totalItems}
+            </span>
+          )}
+        </button>
+        
+        <h1 className={getTitleClassName()}>
+          {settings.shopTitle || 'Chargement...'}
+        </h1>
+        {settings.shopSubtitle && (
+          <p className="text-gray-400 text-center mt-2 text-sm md:text-base">
+            {settings.shopSubtitle}
+          </p>
+        )}
+      </div>
+
+      {/* Texte défilant */}
+      {settings.scrollingText && (
+        <div className="mt-4 overflow-hidden">
+          <div className="animate-scroll whitespace-nowrap">
+            <span className="text-green-400 font-medium">
+              {settings.scrollingText} • {settings.scrollingText} • {settings.scrollingText} •
             </span>
           </div>
         </div>
       )}
-      
-      {/* Bandeau blanc promotionnel - responsive */}
-      {settings.bannerText && settings.bannerText.trim() && (
-        <div className="bg-white/90 backdrop-blur-sm text-black py-1 sm:py-2 px-3 sm:px-4 text-center">
-          <p className="text-black text-responsive-xs font-bold tracking-wide break-words">
-            {settings.bannerText}
-          </p>
+
+      {/* Bannière */}
+      {settings.bannerText && (
+        <div className="mt-4 bg-gradient-to-r from-green-600 to-green-500 text-white text-center py-2 px-4 rounded-lg font-medium">
+          {settings.bannerText}
         </div>
       )}
-      
-                {/* Logo boutique - responsive optimisé */}
-      <div className="bg-black/30 backdrop-blur-md py-2 sm:py-3 md:py-4 px-3 sm:px-4 md:px-6 text-center border-b border-white/10">
-        <div className="flex flex-col items-center justify-center">
-          <img 
-            src="https://i.imgur.com/mNencn1.png" 
-            alt={settings.shopTitle || "ÎLE DE FRANCE FULL OPTION"} 
-            className="h-12 sm:h-16 md:h-20 w-auto"
-            style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
-          />
-          {settings.shopSubtitle && (
-            <p className="text-white/80 text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] font-medium mt-1 sm:mt-2 break-words drop-shadow-sm">
-              {settings.shopSubtitle}
-            </p>
-          )}
-        </div>
-      </div>
     </header>
   );
 }

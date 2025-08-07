@@ -1,6 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Product } from './ProductCard';
+import { useCartStore } from '@/lib/cartStore';
+import { ShoppingCart } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface ProductDetailProps {
   product: Product | null;
@@ -9,6 +12,7 @@ interface ProductDetailProps {
 
 export default function ProductDetail({ product, onClose }: ProductDetailProps) {
   const [whatsappLink, setWhatsappLink] = useState('');
+  const { addItem } = useCartStore();
 
   useEffect(() => {
     loadWhatsappLink();
@@ -29,12 +33,28 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
     }
   };
 
+  const handleAddToCart = (weight: string, price: number, originalPrice: number, discount: number) => {
+    if (!product) return;
+    
+    addItem({
+      productId: product._id,
+      productName: product.name,
+      farm: product.farm,
+      image: product.image,
+      weight,
+      price,
+      originalPrice,
+      discount
+    });
+    
+    toast.success(`${product.name} (${weight}) ajouté au panier !`);
+  };
+
   if (!product) return null;
 
-  // Créer une liste des prix disponibles seulement (filtre les undefined/null/vides)
+  // Créer une liste des prix avec promotions
   const priceList = Object.entries(product.prices || {})
     .filter(([, price]) => {
-      // Filtre plus strict pour éliminer toutes les valeurs invalides
       return price !== undefined && 
              price !== null && 
              price !== 0 && 
@@ -42,61 +62,61 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
              !isNaN(Number(price)) && 
              Number(price) > 0;
     })
-    .map(([weight, price]) => ({
-      weight,
-      price: `${Number(price)}€`
-    }))
+    .map(([weight, price]) => {
+      const promo = product.promotions?.[weight as keyof typeof product.promotions] || 0;
+      const originalPrice = Number(price);
+      const finalPrice = promo > 0 ? originalPrice * (1 - promo / 100) : originalPrice;
+      
+      return {
+        weight,
+        originalPrice,
+        finalPrice,
+        discount: promo
+      };
+    })
     .sort((a, b) => {
-      // Tri par ordre numérique des poids
-      const aNum = parseFloat(a.weight.replace(/[^\d.]/g, ''));
-      const bNum = parseFloat(b.weight.replace(/[^\d.]/g, ''));
-      return aNum - bNum;
+      const weightA = parseInt(a.weight);
+      const weightB = parseInt(b.weight);
+      return weightA - weightB;
     });
 
   return (
-    <div className="fixed inset-0 bg-black z-[10000] overflow-hidden">
-      <div className="h-full overflow-y-auto overscroll-contain pb-20">
-        {/* Header avec bouton retour - responsive */}
-        <div className="sticky top-0 bg-black/95 backdrop-blur-sm p-3 sm:p-4 flex items-center justify-between border-b border-white/20 z-10">
-        <button
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+      <div 
+        className="absolute inset-0" 
+        onClick={onClose}
+      />
+      
+      <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/20 rounded-2xl max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl w-full shadow-2xl animate-in slide-in-from-bottom-4 fade-in duration-300 max-h-[90vh] overflow-y-auto">
+      <div className="p-4 sm:p-6 lg:p-8">
+        {/* Bouton fermer - responsive */}
+        <button 
           onClick={onClose}
-          className="text-white hover:text-gray-300 transition-colors p-1 touch-manipulation"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white transition-colors bg-gray-800/50 backdrop-blur-sm rounded-full p-2 z-10"
         >
           <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <h1 className="text-responsive-lg font-bold text-white">Détail Produit</h1>
-        <div className="w-5 sm:w-6"></div>
-      </div>
 
-      <div className="p-3 sm:p-4 lg:p-6 max-w-4xl mx-auto">
-        {/* Vidéo/Image - responsive */}
-        <div className="relative mb-4 sm:mb-6 flex justify-center">
+        {/* Image ou vidéo - responsive */}
+        <div className="mb-4 sm:mb-6 rounded-xl overflow-hidden">
           {product.video ? (
-            <div className="relative overflow-hidden rounded-xl shadow-2xl w-full max-w-lg">
-              <video 
-                controls 
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-auto aspect-video rounded-xl object-cover"
-                poster={product.image}
-              >
-                <source src={product.video} type="video/mp4" />
-                Ton navigateur ne supporte pas la lecture vidéo.
-              </video>
-              {/* Overlay gradient pour un meilleur contraste */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none rounded-xl"></div>
-            </div>
+            <video 
+              className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] object-cover"
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+            >
+              <source src={product.video} type="video/mp4" />
+            </video>
           ) : (
-            <div className="w-full max-w-lg">
+            <div className="relative w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px]">
               <img 
-                src={product.image}
+                src={product.image} 
                 alt={product.name}
-                className="w-full rounded-xl shadow-lg object-cover aspect-square"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 50vw"
+                className="w-full h-full object-cover"
               />
             </div>
           )}
@@ -122,17 +142,38 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
           )}
         </div>
 
-        {/* Liste des prix - responsive */}
+        {/* Liste des prix avec promotions */}
         <div className="bg-gray-900 border border-white/20 rounded-xl p-3 sm:p-4 lg:p-5 mb-4 sm:mb-6">
           <h3 className="text-responsive-lg font-bold mb-3 sm:mb-4 text-white flex items-center">
             <span className="mr-2">💰</span>
             Tarifs disponibles :
           </h3>
           <div className="space-y-2 sm:space-y-3">
-            {priceList.map(({ weight, price }, idx) => (
-              <div key={idx} className="flex justify-between items-center py-2 sm:py-3 px-2 sm:px-3 bg-gray-800 border border-white/10 rounded-lg hover:bg-gray-700 transition-colors">
-                <span className="font-medium text-white text-responsive-sm">{weight}</span>
-                <span className="font-bold text-white text-responsive-lg">{price}</span>
+            {priceList.map(({ weight, originalPrice, finalPrice, discount }, idx) => (
+              <div key={idx} className="flex items-center justify-between py-2 sm:py-3 px-2 sm:px-3 bg-gray-800 border border-white/10 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <span className="font-medium text-white text-responsive-sm">{weight}</span>
+                  {discount > 0 && (
+                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
+                      PROMO -{discount}%
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    {discount > 0 && (
+                      <span className="text-gray-500 line-through text-sm">{originalPrice}€</span>
+                    )}
+                    <span className="font-bold text-white text-responsive-lg block">{finalPrice.toFixed(2)}€</span>
+                  </div>
+                  <button
+                    onClick={() => handleAddToCart(weight, finalPrice, originalPrice, discount)}
+                    className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition-colors"
+                    title="Ajouter au panier"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>

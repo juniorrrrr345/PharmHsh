@@ -32,6 +32,14 @@ const ProductSchema = new mongoose.Schema({
     '100g': { type: Number, required: true },
     '200g': { type: Number, required: true }
   },
+  promotions: {
+    '5g': { type: Number, default: 0 },
+    '10g': { type: Number, default: 0 },
+    '25g': { type: Number, default: 0 },
+    '50g': { type: Number, default: 0 },
+    '100g': { type: Number, default: 0 },
+    '200g': { type: Number, default: 0 }
+  },
   description: {
     type: String,
     default: ''
