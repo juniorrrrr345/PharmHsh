@@ -9,14 +9,36 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'IDFFULL - Boutique en ligne',
-  description: 'IDFFULL - Votre boutique en ligne. Produits de qualité et livraison rapide.',
+  title: 'PHARMHASHI - Boutique en ligne',
+  description: 'PHARMHASHI - Votre boutique en ligne. Produits de qualité et livraison rapide.',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
   themeColor: '#000000',
+  openGraph: {
+    title: 'PHARMHASHI - Boutique en ligne',
+    description: 'PHARMHASHI - Votre boutique en ligne. Produits de qualité et livraison rapide.',
+    url: 'https://pharm-hsh.vercel.app',
+    siteName: 'PHARMHASHI',
+    images: [
+      {
+        url: 'https://i.imgur.com/xpYlX4Y.jpeg',
+        width: 800,
+        height: 600,
+        alt: 'PHARMHASHI Logo',
+      }
+    ],
+    locale: 'fr_FR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PHARMHASHI - Boutique en ligne',
+    description: 'PHARMHASHI - Votre boutique en ligne. Produits de qualité et livraison rapide.',
+    images: ['https://i.imgur.com/xpYlX4Y.jpeg'],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'IDFFULL'
+    title: 'PHARMHASHI'
   },
   formatDetection: {
     telephone: false
