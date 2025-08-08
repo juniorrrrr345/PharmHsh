@@ -1,4 +1,4 @@
-# 🏭 ÎLE DE FRANCE FULL OPTION - Configuration Complète
+# 🏭 PHARMHASHI - Configuration Complète
 
 ## ✅ Fonctionnalités Configurées
 
@@ -20,7 +20,7 @@
 - ✅ **Paramètres** : Personnalisation complète de la boutique
 
 ### 4. 🎨 Personnalisation
-  - ✅ Nom de la boutique : **ÎLE DE FRANCE FULL OPTION**
+  - ✅ Nom de la boutique : **PHARMHASHI**
 - ✅ Thème personnalisable
 - ✅ Image de fond configurable
 - ✅ Textes et messages personnalisables
@@ -140,4 +140,4 @@ NEXTAUTH_URL=https://lamainvrtr.vercel.app
 
 ---
 
-🎉 **ÎLE DE FRANCE FULL OPTION est maintenant complètement configuré et opérationnel !**
+🎉 **PHARMHASHI est maintenant complètement configuré et opérationnel !**

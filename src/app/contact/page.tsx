@@ -24,14 +24,14 @@ async function getContactData() {
       await db.collection('pages').insertOne({
         slug: 'contact',
         title: 'Contact',
-        content: '# Contactez ÎLE DE FRANCE FULL OPTION\n\nNous sommes à votre disposition pour répondre à toutes vos questions.\n\nModifiez ce contenu depuis le panel d\'administration.',
+        content: '# Contactez PHARMHASHI\n\nNous sommes à votre disposition pour répondre à toutes vos questions.\n\nModifiez ce contenu depuis le panel d\'administration.',
         createdAt: new Date(),
         updatedAt: new Date()
       });
     }
     
     return {
-      content: page?.content || '# Contactez ÎLE DE FRANCE FULL OPTION\n\nNous sommes à votre disposition pour répondre à toutes vos questions.',
+      content: page?.content || '# Contactez PHARMHASHI\n\nNous sommes à votre disposition pour répondre à toutes vos questions.',
       whatsappLink: settings?.whatsappLink || '',
       socialLinks: socialLinks || []
     };

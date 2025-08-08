@@ -1,4 +1,4 @@
-# ÎLE DE FRANCE FULL OPTION - Boutique E-commerce Moderne
+# PHARMHASHI - Boutique E-commerce Moderne
 
 <!-- Deploy: 2025-01-29 20:16 - NOUVEAU CHARGEMENT MODERNE ACTIVÉ -->
 
@@ -6,7 +6,7 @@ Une boutique e-commerce moderne et élégante avec panel d'administration comple
 
 ## 🚀 Nouveau Chargement Moderne
 - Logo animé ⚡
-  - Titre "ÎLE DE FRANCE FULL OPTION"
+  - Titre "PHARMHASHI"
 - Barre de progression colorée
 - Fond sans écran noir
 

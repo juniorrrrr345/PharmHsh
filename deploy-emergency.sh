@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script de déploiement d'urgence pour Vercel
-echo "🚀 Déploiement d'urgence ÎLE DE FRANCE FULL OPTION"
+echo "🚀 Déploiement d'urgence PHARMHASHI"
 
 # Vérifier que nous sommes sur main
 git checkout main
