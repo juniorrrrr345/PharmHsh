@@ -77,9 +77,7 @@ export default async function SocialPage() {
       <div className="content-layer">
         <Header />
         
-        <div className="pt-12 sm:pt-14">
-          <div className="h-4 sm:h-6"></div>
-          
+        <div className="pt-32 sm:pt-36 md:pt-40">
           <main className="pt-4 pb-24 sm:pb-28 px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl mx-auto">
             {/* Titre de la page avec style boutique */}
             <div className="text-center mb-8 sm:mb-12">
