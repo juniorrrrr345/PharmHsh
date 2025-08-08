@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 // URI MongoDB Atlas - Utilise la variable d'environnement
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://pharmhsh:zjOtmFQcdBbi7AXO@pharm.7fyijxn.mongodb.net/?retryWrites=true&w=majority&appName=pharm';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://pharmhsh:zjOtmFQcdBbi7AXO@pharm.7fyijxn.mongodb.net/pharmhsh_shop?retryWrites=true&w=majority&appName=pharm';
 
 interface MongooseCache {
   conn: typeof mongoose | null;

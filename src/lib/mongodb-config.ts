@@ -6,7 +6,7 @@ export const getMongoDBURI = () => {
   }
 
   // Priorité 2 : Configuration de production
-  const PRODUCTION_URI = 'mongodb+srv://lmvrtt2:ALcWY4mLHwvtz1X2@lmvrtt.km9x4q9.mongodb.net/?retryWrites=true&w=majority&appName=LMVRTT';
+  const PRODUCTION_URI = 'mongodb+srv://pharmhsh:zjOtmFQcdBbi7AXO@pharm.7fyijxn.mongodb.net/?retryWrites=true&w=majority&appName=pharm';
   
   // Priorité 3 : URI locale de développement
   const LOCAL_URI = 'mongodb://localhost:27017/pharmhsh_shop';
