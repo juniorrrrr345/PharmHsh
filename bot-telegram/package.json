@@ -1,12 +1,12 @@
 {
-  "name": "telegram-bot-pharmhsh",
+  "name": "telegram-bot-lanation",
   "version": "1.0.0",
-  "description": "Bot Telegram avec MongoDB pour PharmHsh",
-  "main": "bot.js",
+  "description": "Bot Telegram avec MongoDB pour LANATION",
+  "main": "bot-complete.js",
   "scripts": {
-    "start": "node bot.js",
+    "start": "node bot-complete.js",
     "webhook": "node bot-webhook.js",
-    "dev": "nodemon bot.js",
+    "dev": "nodemon bot-complete.js",
     "test": "node test-local.js"
   },
   "dependencies": {

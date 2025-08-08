@@ -16,37 +16,8 @@ if (!process.env.ADMIN_ID) {
 }
 
 // Initialiser le bot
-const botOptions = process.env.BOT_MODE === 'webhook' 
-    ? { webHook: { port: process.env.PORT || 3000 } }
-    : { polling: true };
-
-const bot = new TelegramBot(process.env.BOT_TOKEN, botOptions);
+const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const ADMIN_ID = parseInt(process.env.ADMIN_ID);
-
-// Configuration webhook si nécessaire
-if (process.env.BOT_MODE === 'webhook' && process.env.WEBHOOK_URL) {
-    const express = require('express');
-    const app = express();
-    
-    app.use(express.json());
-    
-    // Route de health check pour Render
-    app.get('/health', (req, res) => {
-        res.status(200).json({ status: 'ok', uptime: process.uptime() });
-    });
-    
-    // Route webhook
-    app.post(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
-        bot.processUpdate(req.body);
-        res.sendStatus(200);
-    });
-    
-    const port = process.env.PORT || 3000;
-    app.listen(port, () => {
-        console.log(`🌐 Serveur webhook démarré sur le port ${port}`);
-        bot.setWebHook(`${process.env.WEBHOOK_URL}/bot${process.env.BOT_TOKEN}`);
-    });
-}
 
 // État des utilisateurs (pour gérer les conversations)
 const userStates = {};
@@ -608,17 +579,17 @@ bot.on('callback_query', async (callbackQuery) => {
                 
                 // Créer le contenu du fichier avec des statistiques
                 const exportDate = new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' });
-                const totalUsersCount = users.size;
-                const totalAdmins = admins.size;
-                const regularUsers = totalUsersCount - totalAdmins;
+                const totalUsersExport = users.size;
+                const totalAdminsExport = admins.size;
+                const regularUsersExport = totalUsersExport - totalAdminsExport;
                 
                 const fileContent = `📊 EXPORT DES UTILISATEURS DU BOT\n` +
                     `📅 Date d'export: ${exportDate}\n` +
                     `============================\n\n` +
                     `STATISTIQUES:\n` +
-                    `- Total utilisateurs: ${totalUsersCount}\n` +
-                    `- Utilisateurs réguliers: ${regularUsers}\n` +
-                    `- Administrateurs: ${totalAdmins}\n` +
+                    `- Total utilisateurs: ${totalUsersExport}\n` +
+                    `- Utilisateurs réguliers: ${regularUsersExport}\n` +
+                    `- Administrateurs: ${totalAdminsExport}\n` +
                     `============================\n\n` +
                     `LISTE DÉTAILLÉE:\n\n` +
                     usersDetails.join('\n\n');
