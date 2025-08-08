@@ -237,7 +237,7 @@ export default function HomePage() {
                 </div>
               
               <p className="text-2xl text-white mb-8 font-semibold drop-shadow-lg animate-pulse">
-                PHARMHASHI
+                PHARM***HI
               </p>
               
               {/* Nouvelle barre de chargement style noir et blanc */}
@@ -259,7 +259,7 @@ export default function HomePage() {
               
               {/* Footer */}
               <div className="text-white text-sm font-medium drop-shadow-md">
-                <p>© 2025 PHARMHASHI</p>
+                <p>© 2025 PHARM***HI</p>
               </div>
             </div>
           </div>
