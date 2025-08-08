@@ -29,6 +29,15 @@ if (isWebhook) {
     const port = process.env.PORT || 3000;
     const webhookPath = `/bot${process.env.BOT_TOKEN}`;
     
+    // Route racine
+    app.get('/', (req, res) => {
+        res.json({ 
+            status: 'Bot Telegram PharmHsh en cours d\'exécution',
+            health: '/health',
+            webhook: 'Configuré'
+        });
+    });
+    
     // Route de health check
     app.get('/health', (req, res) => {
         res.json({ status: 'ok', bot: 'running' });
@@ -36,6 +45,7 @@ if (isWebhook) {
     
     // Route pour le webhook
     app.post(webhookPath, (req, res) => {
+        console.log('📨 Webhook reçu:', JSON.stringify(req.body, null, 2));
         bot.processUpdate(req.body);
         res.sendStatus(200);
     });
@@ -408,7 +418,20 @@ bot.on('callback_query', async (callbackQuery) => {
                 break;
 
             case 'admin_manage_social':
-                await updateMessage(chatId, messageId, '🌐 Gestion des réseaux sociaux', {
+                let socialText = '🌐 **Gestion des réseaux sociaux**\n\n';
+                
+                if (config.socialNetworks && config.socialNetworks.length > 0) {
+                    socialText += '📋 **Réseaux actuels :**\n';
+                    config.socialNetworks.forEach((network, index) => {
+                        socialText += `${index + 1}. ${network.emoji} ${network.name}\n`;
+                        socialText += `   └ ${network.url}\n\n`;
+                    });
+                } else {
+                    socialText += '_Aucun réseau social configuré_\n';
+                }
+                
+                await updateMessage(chatId, messageId, socialText, {
+                    parse_mode: 'Markdown',
                     reply_markup: getSocialManageKeyboard(config)
                 });
                 break;
@@ -454,6 +477,34 @@ bot.on('callback_query', async (callbackQuery) => {
                 await updateMessage(chatId, messageId, '📐 Choisissez le nombre de boutons par ligne:', {
                     reply_markup: getSocialLayoutKeyboard()
                 });
+                break;
+                
+            case 'admin_remove_social':
+                if (config.socialNetworks && config.socialNetworks.length > 0) {
+                    let removeText = '🗑️ **Supprimer un réseau social**\n\n';
+                    removeText += 'Cliquez sur le réseau à supprimer:\n\n';
+                    
+                    const removeKeyboard = {
+                        inline_keyboard: config.socialNetworks.map((network, index) => [{
+                            text: `❌ ${network.emoji} ${network.name}`,
+                            callback_data: `remove_social_${index}`
+                        }])
+                    };
+                    
+                    removeKeyboard.inline_keyboard.push([
+                        { text: '🔙 Retour', callback_data: 'admin_manage_social' }
+                    ]);
+                    
+                    await updateMessage(chatId, messageId, removeText, {
+                        parse_mode: 'Markdown',
+                        reply_markup: removeKeyboard
+                    });
+                } else {
+                    await bot.answerCallbackQuery(callbackQuery.id, {
+                        text: '❌ Aucun réseau social à supprimer',
+                        show_alert: true
+                    });
+                }
                 break;
 
             case 'admin_manage_admins':
@@ -679,6 +730,38 @@ bot.on('callback_query', async (callbackQuery) => {
                     await updateMessage(chatId, messageId, '🌐 Gestion des réseaux sociaux', {
                         reply_markup: getSocialManageKeyboard(config)
                     });
+                }
+                // Gestion de la suppression des réseaux sociaux
+                else if (data.startsWith('remove_social_')) {
+                    const index = parseInt(data.replace('remove_social_', ''));
+                    if (config.socialNetworks && config.socialNetworks[index]) {
+                        const removedNetwork = config.socialNetworks[index];
+                        config.socialNetworks.splice(index, 1);
+                        await saveConfig(config);
+                        
+                        await bot.answerCallbackQuery(callbackQuery.id, {
+                            text: `✅ ${removedNetwork.name} supprimé!`,
+                            show_alert: true
+                        });
+                        
+                        // Retour à la gestion des réseaux sociaux
+                        let socialText = '🌐 **Gestion des réseaux sociaux**\n\n';
+                        
+                        if (config.socialNetworks && config.socialNetworks.length > 0) {
+                            socialText += '📋 **Réseaux actuels :**\n';
+                            config.socialNetworks.forEach((network, index) => {
+                                socialText += `${index + 1}. ${network.emoji} ${network.name}\n`;
+                                socialText += `   └ ${network.url}\n\n`;
+                            });
+                        } else {
+                            socialText += '_Aucun réseau social configuré_\n';
+                        }
+                        
+                        await updateMessage(chatId, messageId, socialText, {
+                            parse_mode: 'Markdown',
+                            reply_markup: getSocialManageKeyboard(config)
+                        });
+                    }
                 }
                 // Gestion de la suppression des admins
                 else if (data.startsWith('remove_admin_')) {
