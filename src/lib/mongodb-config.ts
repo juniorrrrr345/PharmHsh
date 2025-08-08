@@ -9,7 +9,7 @@ export const getMongoDBURI = () => {
   const PRODUCTION_URI = 'mongodb+srv://lmvrtt2:ALcWY4mLHwvtz1X2@lmvrtt.km9x4q9.mongodb.net/?retryWrites=true&w=majority&appName=LMVRTT';
   
   // Priorité 3 : URI locale de développement
-  const LOCAL_URI = 'mongodb://localhost:27017/lmvrtt_shop';
+  const LOCAL_URI = 'mongodb://localhost:27017/pharmhsh_shop';
   
   // En production (Vercel), utiliser l'URI de production
   if (process.env.VERCEL || process.env.NODE_ENV === 'production') {

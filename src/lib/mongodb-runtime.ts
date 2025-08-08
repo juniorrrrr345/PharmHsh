@@ -19,7 +19,7 @@ if (!cached) {
 async function connectDB() {
   // Configuration MongoDB - URI depuis les variables d'environnement
   const MONGODB_URI = process.env.MONGODB_URI || 
-    'mongodb+srv://idffulloption:Junior30@cluster0.wdopvu5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+    'mongodb+srv://pharmhsh:zjOtmFQcdBbi7AXO@pharm.7fyijxn.mongodb.net/?retryWrites=true&w=majority&appName=pharm';
 
   console.log('🔗 Connexion MongoDB avec URI:', MONGODB_URI.replace(/\/\/[^:]+:[^@]+@/, '//***:***@'));
 
@@ -57,14 +57,14 @@ async function connectDB() {
 // Fonction pour l'API (MongoDB client direct)
 export async function connectToDatabase() {
   const MONGODB_URI = process.env.MONGODB_URI || 
-    'mongodb+srv://idffulloption:Junior30@cluster0.wdopvu5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+    'mongodb+srv://pharmhsh:zjOtmFQcdBbi7AXO@pharm.7fyijxn.mongodb.net/?retryWrites=true&w=majority&appName=pharm';
 
   const client = new MongoClient(MONGODB_URI);
   await client.connect();
   
   return {
     client,
-    db: client.db('idffull_shop')
+    db: client.db('pharmhsh_shop')
   };
 }
 
