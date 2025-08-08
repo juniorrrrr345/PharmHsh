@@ -283,14 +283,14 @@ export default function HomePage() {
         <Header />
         
         {/* Ajouter un padding-top pour compenser le header fixe */}
-        <div className="pt-20 sm:pt-24 md:pt-28">
+        <div className="pt-24 sm:pt-28 md:pt-32">
             {selectedProduct ? (
               <ProductDetail 
                 product={selectedProduct} 
                 onClose={() => setSelectedProduct(null)} 
               />
             ) : (
-              <div>
+              <div className="pt-2">
                 <CategoryFilter
                   categories={categories}
                   farms={farms}
