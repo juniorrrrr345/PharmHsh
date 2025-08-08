@@ -246,10 +246,7 @@ bot.onText(/\/start/, async (msg) => {
     // Ajouter l'utilisateur à la liste
     await saveUser(userId, msg.from);
     
-    // Supprimer le message de commande
-    try {
-        await bot.deleteMessage(chatId, msg.message_id);
-    } catch (error) {}
+    // Ne pas supprimer le message /start pour garder l'historique
     
     // Envoyer le message d'accueil avec les infos de l'utilisateur
     await sendWelcomeMessage(chatId, null, msg.from);
