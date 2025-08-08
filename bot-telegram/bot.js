@@ -15,9 +15,44 @@ if (!process.env.ADMIN_ID) {
     process.exit(1);
 }
 
-// Initialiser le bot
-const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
+// Initialiser le bot selon l'environnement
+const isWebhook = process.env.BOT_MODE === 'webhook';
+const bot = new TelegramBot(process.env.BOT_TOKEN, isWebhook ? {} : { polling: true });
 const ADMIN_ID = parseInt(process.env.ADMIN_ID);
+
+// Si on est en mode webhook, configurer Express
+if (isWebhook) {
+    const express = require('express');
+    const app = express();
+    app.use(express.json());
+    
+    const port = process.env.PORT || 3000;
+    const webhookPath = `/bot${process.env.BOT_TOKEN}`;
+    
+    // Route de health check
+    app.get('/health', (req, res) => {
+        res.json({ status: 'ok', bot: 'running' });
+    });
+    
+    // Route pour le webhook
+    app.post(webhookPath, (req, res) => {
+        bot.processUpdate(req.body);
+        res.sendStatus(200);
+    });
+    
+    // Démarrer le serveur
+    app.listen(port, () => {
+        console.log(`🌐 Serveur webhook démarré sur le port ${port}`);
+        
+        // Configurer le webhook
+        const webhookUrl = `${process.env.WEBHOOK_URL}${webhookPath}`;
+        bot.setWebHook(webhookUrl).then(() => {
+            console.log(`✅ Webhook configuré: ${webhookUrl}`);
+        }).catch(err => {
+            console.error('❌ Erreur configuration webhook:', err);
+        });
+    });
+}
 
 // État des utilisateurs (pour gérer les conversations)
 const userStates = {};
