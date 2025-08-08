@@ -32,12 +32,33 @@ MONGODB_URI=mongodb+srv://pharmhsh:zjOtmFQcdBbi7AXO@pharm.7fyijxn.mongodb.net/?r
 CLOUDINARY_CLOUD_NAME=df70ymn9g
 CLOUDINARY_API_KEY=528819611777938
 CLOUDINARY_API_SECRET=vIS_LAJ7u4SYpk0l4GgRS4TxdBQ
+CLOUDINARY_UPLOAD_PRESET=pharmhsh_upload
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=df70ymn9g
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=pharmhsh_upload
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=changez_ce_mot_de_passe
 NEXT_PUBLIC_BASE_URL=https://pharmhsh.vercel.app
 ```
 
-⚠️ **IMPORTANT**: Changez `ADMIN_PASSWORD` par un mot de passe sécurisé !
+⚠️ **IMPORTANT**: 
+- Changez `ADMIN_PASSWORD` par un mot de passe sécurisé !
+- Créez l'upload preset `pharmhsh_upload` sur Cloudinary (voir ci-dessous)
+
+## 📸 Configuration de l'Upload Preset sur Cloudinary
+
+1. **Connectez-vous à votre dashboard Cloudinary**
+2. **Allez dans Settings → Upload → Upload presets**
+3. **Cliquez sur "Add upload preset"**
+4. **Configurez comme suit :**
+   - **Preset name** : `pharmhsh_upload`
+   - **Signing mode** : **Unsigned** (pour l'upload côté client)
+   - **Folder** : `pharmhsh`
+   - **Allowed formats** : jpg, png, gif, webp, mp4, webm
+   - **Eager transformations** (pour les images) :
+     - Width: 800
+     - Crop: limit
+     - Quality: auto
+5. **Cliquez sur "Save"**
 
 ## 📝 Étapes Détaillées pour Configurer les Variables
 
@@ -63,6 +84,7 @@ Si le déploiement échoue :
 1. Vérifiez les logs dans Vercel Dashboard
 2. Assurez-vous que toutes les variables d'environnement sont configurées
 3. Vérifiez que MongoDB accepte les connexions depuis Vercel
+4. Vérifiez que l'upload preset Cloudinary est bien créé
 
 ## 🎉 C'est fait !
 

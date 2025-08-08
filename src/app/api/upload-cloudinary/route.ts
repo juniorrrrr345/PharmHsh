@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import cloudinary from '@/lib/cloudinary';
 
-// Configuration Next.js 14
+export const runtime = 'nodejs';
 export const maxDuration = 60; // 60 secondes pour les uploads vidéo
-export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
+  console.log('🌟 Nouvelle requête upload Cloudinary avec Upload Preset');
+  
   try {
-    console.log('🚀 Upload Cloudinary démarré...');
-    
-    // Vérifier la configuration Cloudinary
-    console.log('🔧 Configuration Cloudinary:', {
-      cloud_name: cloudinary.config().cloud_name,
-      api_key: cloudinary.config().api_key ? 'OK' : 'MANQUANT',
-      api_secret: cloudinary.config().api_secret ? 'OK' : 'MANQUANT'
+    // Vérifier la configuration
+    console.log('📋 Configuration Cloudinary:', {
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'MANQUANT',
+      upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET || 'pharmhsh_upload'
     });
     
     const formData = await request.formData();
@@ -72,26 +70,19 @@ export async function POST(request: NextRequest) {
       throw new Error('Impossible de lire le fichier');
     }
 
-    // Upload vers Cloudinary avec timeout
-    console.log('⚡ Début upload vers Cloudinary...');
+    // Upload vers Cloudinary avec upload preset
+    console.log('⚡ Début upload vers Cloudinary avec preset...');
     const uploadResult = await Promise.race([
       new Promise((resolve, reject) => {
-      // Configuration simplifiée pour éviter les erreurs
+      // Configuration avec upload preset
       const uploadOptions: any = {
+        upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET || 'pharmhsh_upload',
         resource_type: isVideo ? 'video' : 'image',
-        folder: isVideo ? 'boutique_videos' : 'boutique_images', // Pas de slash pour éviter erreurs
-        public_id: `upload_${Date.now()}`, // Nom simplifié
-        overwrite: true
+        folder: isVideo ? 'pharmhsh/videos' : 'pharmhsh/images',
+        public_id: `${isVideo ? 'video' : 'image'}_${Date.now()}`
       };
 
-      // Ajouter optimisations seulement si nécessaire
-      if (!isVideo) {
-        uploadOptions.quality = 'auto';
-        uploadOptions.width = 800;
-        uploadOptions.crop = 'limit';
-      }
-
-      console.log('☁️ Options upload:', uploadOptions);
+      console.log('☁️ Options upload avec preset:', uploadOptions);
 
       const uploadStream = cloudinary.uploader.upload_stream(
         uploadOptions,
@@ -100,8 +91,7 @@ export async function POST(request: NextRequest) {
             console.error('❌ Erreur Cloudinary détaillée:', {
               message: error.message,
               http_code: error.http_code,
-              name: error.name,
-              error: error
+              name: error.name
             });
             reject(error);
           } else {
@@ -109,7 +99,7 @@ export async function POST(request: NextRequest) {
               public_id: result?.public_id,
               url: result?.secure_url,
               format: result?.format,
-              bytes: result?.bytes
+              size: result?.bytes
             });
             resolve(result);
           }
