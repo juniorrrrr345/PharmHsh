@@ -40,25 +40,25 @@ function getAdminKeyboard() {
     return {
         inline_keyboard: [
             [
-                { text: '📝 Modifier le message d\'accueil', callback_data: 'admin_message' }
+                { text: '📝 Modifier le message d\'accueil', callback_data: 'admin_edit_welcome' }
             ],
             [
-                { text: '🖼️ Modifier la photo d\'accueil', callback_data: 'admin_photo' }
+                { text: '🖼️ Modifier la photo d\'accueil', callback_data: 'admin_edit_photo' }
             ],
             [
-                { text: '📱 Modifier la mini application', callback_data: 'admin_miniapp' }
+                { text: '📱 Modifier la mini application', callback_data: 'admin_edit_miniapp' }
             ],
             [
-                { text: '🌐 Gérer les réseaux sociaux', callback_data: 'admin_social' }
+                { text: '🌐 Gérer les réseaux sociaux', callback_data: 'admin_manage_social' }
             ],
             [
-                { text: 'ℹ️ Modifier les informations', callback_data: 'admin_info' }
+                { text: 'ℹ️ Modifier les informations', callback_data: 'admin_edit_info' }
             ],
             [
                 { text: '📢 Envoyer un message à tous', callback_data: 'admin_broadcast' }
             ],
             [
-                { text: '👥 Gérer les administrateurs', callback_data: 'admin_admins' }
+                { text: '👥 Gérer les administrateurs', callback_data: 'admin_manage_admins' }
             ],
             [
                 { text: '📊 Statistiques du bot', callback_data: 'admin_stats' }
@@ -72,14 +72,14 @@ function getSocialManageKeyboard() {
     return {
         inline_keyboard: [
             [
-                { text: '➕ Ajouter', callback_data: 'social_add' },
-                { text: '❌ Supprimer', callback_data: 'social_remove' }
+                { text: '➕ Ajouter', callback_data: 'admin_add_social' },
+                { text: '❌ Supprimer', callback_data: 'admin_remove_social' }
             ],
             [
-                { text: '📐 Disposition', callback_data: 'social_layout' }
+                { text: '📐 Disposition', callback_data: 'admin_social_layout' }
             ],
             [
-                { text: '🔙 Retour', callback_data: 'admin_back' }
+                { text: '🔙 Retour', callback_data: 'admin_menu' }
             ]
         ]
     };
