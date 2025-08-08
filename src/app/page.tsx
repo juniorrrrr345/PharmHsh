@@ -283,17 +283,14 @@ export default function HomePage() {
         <Header />
         
         {/* Ajouter un padding-top pour compenser le header fixe */}
-        <div className="pt-24 sm:pt-28 md:pt-32">
+        <div className="pt-20 sm:pt-24 md:pt-28">
             {selectedProduct ? (
               <ProductDetail 
                 product={selectedProduct} 
                 onClose={() => setSelectedProduct(null)} 
               />
             ) : (
-              <div className="pt-12 sm:pt-14">
-                {/* Espacement pour éviter le chevauchement avec le header */}
-                <div className="h-4 sm:h-6"></div>
-                
+              <div>
                 <CategoryFilter
                   categories={categories}
                   farms={farms}
@@ -303,7 +300,7 @@ export default function HomePage() {
                   onFarmChange={setSelectedFarm}
                 />
                 
-                <main className="pt-4 pb-24 sm:pb-28 px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl mx-auto">
+                <main className="pt-3 pb-24 sm:pb-28 px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl mx-auto">
 
                 {/* Affichage des produits */}
                 {filteredProducts.length === 0 && products.length > 0 ? (
