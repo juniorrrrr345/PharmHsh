@@ -90,17 +90,17 @@ function getSocialLayoutKeyboard() {
     return {
         inline_keyboard: [
             [
-                { text: '1️⃣', callback_data: 'layout_1' },
-                { text: '2️⃣', callback_data: 'layout_2' },
-                { text: '3️⃣', callback_data: 'layout_3' }
+                { text: '1️⃣', callback_data: 'social_layout_1' },
+                { text: '2️⃣', callback_data: 'social_layout_2' },
+                { text: '3️⃣', callback_data: 'social_layout_3' }
             ],
             [
-                { text: '4️⃣', callback_data: 'layout_4' },
-                { text: '5️⃣', callback_data: 'layout_5' },
-                { text: '6️⃣', callback_data: 'layout_6' }
+                { text: '4️⃣', callback_data: 'social_layout_4' },
+                { text: '5️⃣', callback_data: 'social_layout_5' },
+                { text: '6️⃣', callback_data: 'social_layout_6' }
             ],
             [
-                { text: '🔙 Retour', callback_data: 'admin_social' }
+                { text: '🔙 Retour', callback_data: 'admin_manage_social' }
             ]
         ]
     };

@@ -722,13 +722,14 @@ bot.on('callback_query', async (callbackQuery) => {
                 else if (data.startsWith('social_layout_')) {
                     const buttonsPerRow = parseInt(data.replace('social_layout_', ''));
                     config.socialButtonsPerRow = buttonsPerRow;
-                    saveConfig(config);
+                    await saveConfig(config);
                     await bot.answerCallbackQuery(callbackQuery.id, {
                         text: `✅ Disposition mise à jour: ${buttonsPerRow} bouton(s) par ligne`,
                         show_alert: true
                     });
-                    await updateMessage(chatId, messageId, '🌐 Gestion des réseaux sociaux', {
-                        reply_markup: getSocialManageKeyboard(config)
+                    // Rester sur le menu de disposition
+                    await updateMessage(chatId, messageId, `📐 Disposition actuelle: ${buttonsPerRow} bouton(s) par ligne\n\nChoisissez le nombre de boutons par ligne:`, {
+                        reply_markup: getSocialLayoutKeyboard()
                     });
                 }
                 // Gestion de la suppression des réseaux sociaux
