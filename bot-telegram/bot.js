@@ -1,8 +1,14 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
+const fsPromises = require('fs').promises;
 const { loadConfig, saveConfig, getImagePath } = require('./config');
 const { getMainKeyboard, getAdminKeyboard, getSocialManageKeyboard, getSocialLayoutKeyboard, getConfirmKeyboard } = require('./keyboards');
+
+// Définir le répertoire des images
+const IMAGES_DIR = path.join(__dirname, 'images');
 
 // Vérifier les variables d'environnement
 if (!process.env.BOT_TOKEN) {
@@ -95,6 +101,14 @@ const User = mongoose.model('BotUser', userSchema);
 // Charger la configuration au démarrage
 async function initializeBot() {
     try {
+        // Créer le répertoire images s'il n'existe pas
+        try {
+            await fsPromises.mkdir(IMAGES_DIR, { recursive: true });
+            console.log('✅ Répertoire images créé/vérifié');
+        } catch (err) {
+            console.error('⚠️ Erreur création répertoire images:', err);
+        }
+        
         config = await loadConfig();
         console.log('✅ Configuration chargée depuis MongoDB');
         
@@ -219,21 +233,11 @@ async function sendWelcomeMessage(chatId, editMessageId = null, userInfo = null)
         };
 
         if (config.welcomeImage) {
-            const imagePath = getImagePath(config.welcomeImage);
-            if (fs.existsSync(imagePath)) {
-                // Avec image, on doit envoyer un nouveau message
-                await sendNewPhoto(chatId, imagePath, {
-                    caption: personalizedMessage,
-                    ...options
-                });
-            } else {
-                // Sans image valide, utiliser du texte
-                if (editMessageId && activeMessages[chatId] === editMessageId) {
-                    await updateMessage(chatId, editMessageId, personalizedMessage, options);
-                } else {
-                    await sendNewMessage(chatId, personalizedMessage, options);
-                }
-            }
+            // Utiliser directement le file_id de Telegram
+            await sendNewPhoto(chatId, config.welcomeImage, {
+                caption: personalizedMessage,
+                ...options
+            });
         } else {
             // Sans image, on peut éditer ou envoyer un nouveau message
             if (editMessageId && activeMessages[chatId] === editMessageId) {
@@ -344,15 +348,11 @@ bot.on('callback_query', async (callbackQuery) => {
                 };
                 
                 if (config.welcomeImage) {
-                    const imagePath = getImagePath(config.welcomeImage);
-                    if (fs.existsSync(imagePath)) {
-                        await sendNewPhoto(chatId, imagePath, {
-                            caption: config.infoText,
-                            ...infoOptions
-                        });
-                    } else {
-                        await updateMessage(chatId, messageId, config.infoText, infoOptions);
-                    }
+                    // Utiliser directement le file_id de Telegram
+                    await sendNewPhoto(chatId, config.welcomeImage, {
+                        caption: config.infoText,
+                        ...infoOptions
+                    });
                 } else {
                     await updateMessage(chatId, messageId, config.infoText, infoOptions);
                 }
@@ -1059,40 +1059,14 @@ bot.on('photo', async (msg) => {
         const photo = msg.photo[msg.photo.length - 1];
         const fileId = photo.file_id;
 
-        // Télécharger la photo
-        const file = await bot.getFile(fileId);
-        const filePath = file.file_path;
-        const downloadUrl = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${filePath}`;
+        // Stocker directement le file_id de Telegram (pas de téléchargement local)
+        config.welcomeImage = fileId;
+        await saveConfig(config);
+        
+        delete userStates[userId];
 
-        // Sauvegarder la photo
-        const fileName = `welcome_${Date.now()}.jpg`;
-        const localPath = path.join(IMAGES_DIR, fileName);
-
-        const https = require('https');
-        const fileStream = fs.createWriteStream(localPath);
-
-        https.get(downloadUrl, (response) => {
-            response.pipe(fileStream);
-            fileStream.on('finish', async () => {
-                fileStream.close();
-                
-                // Supprimer l'ancienne photo si elle existe
-                if (config.welcomeImage) {
-                    const oldPath = getImagePath(config.welcomeImage);
-                    if (fs.existsSync(oldPath)) {
-                        fs.unlinkSync(oldPath);
-                    }
-                }
-
-                // Mettre à jour la configuration
-                config.welcomeImage = fileName;
-                saveConfig(config);
-                delete userStates[userId];
-
-                await updateMessage(chatId, userState.messageId, '✅ Photo d\'accueil mise à jour!', {
-                    reply_markup: getAdminKeyboard()
-                });
-            });
+        await updateMessage(chatId, userState.messageId, '✅ Photo d\'accueil mise à jour!', {
+            reply_markup: getAdminKeyboard()
         });
     } catch (error) {
         console.error('Erreur lors du traitement de la photo:', error);
