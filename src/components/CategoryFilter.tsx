@@ -64,9 +64,9 @@ export default function CategoryFilter({
           </button>
           
           {showCategories && (
-            <div className="absolute top-full left-0 right-0 mt-3 bg-black/60 backdrop-blur-xl rounded-2xl shadow-2xl z-[9999] border border-white/20 overflow-hidden animate-fadeIn">
+            <div className="absolute top-full left-0 right-0 mt-3 bg-black/85 backdrop-blur-xl rounded-2xl shadow-2xl z-[9999] border border-white/30 overflow-hidden animate-fadeIn">
               {/* En-tête du dropdown */}
-              <div className="px-5 py-4 bg-white/10 backdrop-blur-sm border-b border-white/20">
+              <div className="px-5 py-4 bg-white/15 backdrop-blur-sm border-b border-white/20">
                 <div className="flex items-center justify-between">
                   <span className="text-white font-bold text-base">Catégories</span>
                   <span className="text-blue-400 text-sm font-medium bg-blue-500/20 px-2 py-1 rounded-lg">{categories.length - 1}</span>
@@ -82,8 +82,8 @@ export default function CategoryFilter({
                       onCategoryChange(category);
                       setShowCategories(false);
                     }}
-                    className={`w-full text-left px-5 py-4 text-sm font-medium hover:bg-white/10 transition-all duration-200 border-b border-white/10 last:border-b-0 group ${
-                      selectedCategory === category ? 'bg-white/20 text-white border-l-4 border-l-green-500' : 'text-white/90'
+                    className={`w-full text-left px-5 py-4 text-sm font-medium hover:bg-white/15 transition-all duration-200 border-b border-white/10 last:border-b-0 group ${
+                      selectedCategory === category ? 'bg-white/25 text-white border-l-4 border-l-green-500' : 'text-white'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -126,9 +126,9 @@ export default function CategoryFilter({
           </button>
           
           {showFarms && (
-            <div className="absolute top-full left-0 right-0 mt-3 bg-black/60 backdrop-blur-xl rounded-2xl shadow-2xl z-[9999] border border-white/20 overflow-hidden animate-fadeIn">
+            <div className="absolute top-full left-0 right-0 mt-3 bg-black/85 backdrop-blur-xl rounded-2xl shadow-2xl z-[9999] border border-white/30 overflow-hidden animate-fadeIn">
               {/* En-tête du dropdown */}
-              <div className="px-5 py-4 bg-white/10 backdrop-blur-sm border-b border-white/20">
+              <div className="px-5 py-4 bg-white/15 backdrop-blur-sm border-b border-white/20">
                 <div className="flex items-center justify-between">
                   <span className="text-white font-bold text-base">Farms</span>
                   <span className="text-green-400 text-sm font-medium bg-green-500/20 px-2 py-1 rounded-lg">{farms.length - 1}</span>
@@ -144,8 +144,8 @@ export default function CategoryFilter({
                       onFarmChange(farm);
                       setShowFarms(false);
                     }}
-                    className={`w-full text-left px-5 py-4 text-sm font-medium hover:bg-white/10 transition-all duration-200 border-b border-white/10 last:border-b-0 group ${
-                      selectedFarm === farm ? 'bg-white/20 text-white border-l-4 border-l-green-500' : 'text-white/90'
+                    className={`w-full text-left px-5 py-4 text-sm font-medium hover:bg-white/15 transition-all duration-200 border-b border-white/10 last:border-b-0 group ${
+                      selectedFarm === farm ? 'bg-white/25 text-white border-l-4 border-l-green-500' : 'text-white'
                     }`}
                   >
                     <div className="flex items-center gap-3">
